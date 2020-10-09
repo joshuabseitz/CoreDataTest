@@ -7,19 +7,26 @@
 //
 
 import Foundation
+import CoreData
 
 struct PersistenceController {
 	
-	func save() {
-		
+	static var container: NSPersistentContainer!
+	
+	static func save(_ person: Person) {
+		container.viewContext.insert(person)
+		try! container.viewContext.save()
 	}
 	
-	func get() {
-		
+	static func getAllPeople() -> [Person] {
+		let personFetchRequest: NSFetchRequest<Person> = Person.fetchRequest()
+//		personFetchRequest.predicate = NSPredicate(format: "Name", "Joshua") // How to get a specific result.
+		let personResult = try! container.viewContext.fetch(personFetchRequest)
+		return personResult
 	}
 	
-	func delete() {
-		
+	static func delete(_ person: Person) {
+		container.viewContext.delete(person)
+		try! container.viewContext.save()
 	}
-	
 }
